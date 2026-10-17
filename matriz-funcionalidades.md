@@ -42,6 +42,12 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 | F19 | Panel de Admin y Recepción: gestión de citas, catálogo y datos del centro | ✅ | vidasalud-frontend | `admin-panel.component.*` |
 | F20 | Sitio público: inicio con especialidades y página Nosotros | ✅ | vidasalud-frontend | `home/`, `about/` · [8d32674](https://github.com/effimrv/vidasalud-frontend/commit/8d32674) |
 | F21 | Persistencia en PostgreSQL cloud (Supabase) con entidades y repositorios JPA | ✅ | appointments + catalog | `model/`, `repository/`, `application.yml` |
+| F39 | Flujo automático de la cita (revisión, confirmación, llegada, atención y cierre) sin intervención manual, con eventos en RabbitMQ en cada paso | ✅ | vidasalud-ms-appointments | `flujo/FlujoAutomatico` · `FlujoAutomaticoTest` |
+| F40 | Historial de cada cita con fecha, responsable y detalle de cada cambio | ✅ | vidasalud-ms-appointments | Tabla `historial_atenciones` · `GET /api/appointments/{id}` |
+| F41 | Agenda con horas ocupadas (reservas, bloqueos del profesional, horas pasadas, domingos) y rechazo de reservas duplicadas (409) | ✅ | vidasalud-ms-appointments + frontend | `GET /api/appointments/disponibilidad` · `AgendaServiceTest` |
+| F42 | Demanda simulada: pacientes ficticios reservan y cancelan horas cada cierto tiempo | ✅ | vidasalud-ms-appointments | `flujo/DemandaSimulada` |
+| F43 | Vistas en tiempo real (paciente, recepción y admin) con barra de progreso, avisos de cambio de estado y detalle completo de cada cita | ✅ | vidasalud-frontend | `DetalleCitaComponent` · `ProgresoCitaComponent` |
+| F44 | Cancelación de citas por el paciente (solo las propias) y por recepción, registrando quién canceló | ✅ | vidasalud-ms-bff + appointments | `PUT /api/appointments/{id}/status` · `AppointmentsControllerTest` |
 
 ## 4. Mensajería asíncrona (RabbitMQ)
 
@@ -73,6 +79,6 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 
 | Total del alcance | Implementadas | Parciales | No implementadas | % implementado |
 |---|---|---|---|---|
-| 38 | 38 | 0 | 0 | **100 %** |
+| 44 | 44 | 0 | 0 | **100 %** |
 
 *% implementado = funcionalidades implementadas y operativas ÷ total del alcance × 100.*
