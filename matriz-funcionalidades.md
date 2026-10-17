@@ -66,12 +66,12 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 |---|---|---|---|---|
 | F35 | BFF y microservicios de citas y catálogo desplegados y accesibles a través del API Gateway | ✅ | AWS EC2 + API Gateway | `https://dzv5td4m80.execute-api.us-east-1.amazonaws.com/api/health` → 200 |
 | F36 | Frontend desplegado en la nube | 🟡 | vidasalud-frontend | Pendiente: indicar la URL del despliegue y agregarla al CORS del gateway |
-| F37 | RabbitMQ (clúster) y ms-notify desplegados en la nube | 🟡 | vidasalud-infra + EC2 | Pendiente: ejecutar `docker compose --profile apps up -d` en EC2 y adjuntar captura |
+| F37 | RabbitMQ (clúster de 2 nodos), ms-notify y ms-appointments con productor desplegados en la nube | ✅ | vidasalud-infra + AWS EC2 (t3.small) | `docker compose -f docker-compose.yml -f docker-compose.ec2.yml --profile apps up -d` · `rabbitmqctl cluster_status` (2 nodos) · log: cita 21 `cita.confirmada` → correo + ticket T-0001 con ACK |
 
 ## Resumen
 
 | Total del alcance | Implementadas | Parciales | No implementadas | % implementado |
 |---|---|---|---|---|
-| 37 | 35 | 2 | 0 | **94,6 %** |
+| 37 | 36 | 1 | 0 | **97,3 %** |
 
 *% implementado = funcionalidades implementadas y operativas ÷ total del alcance × 100.*
