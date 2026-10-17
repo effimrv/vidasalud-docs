@@ -74,14 +74,14 @@ flowchart TD
     R -- No --> N2[basicNack sin requeue] --> DLQ
 ```
 
-Cada envío a una DLQ se registra en el log de `ms-notify` con nivel `ERROR` y el motivo.
+Cada consumidor (`NotificacionCitaListener`, `TicketCitaListener` y `DocumentoCitaListener`) ejecuta explícitamente `basicAck` o `basicNack`. La decisión de reintentar o mandar a la DLQ la toma `ConfirmacionMensajes.reintentarOEnviarADlq`. Cada envío a una DLQ se registra en el log de `ms-notify` con nivel `ERROR` y el motivo.
 
 ## Configuración centralizada
 
 | Servicio | Dónde están los nombres | Dónde se declaran los beans |
 |---|---|---|
-| ms-notify | `application.yml` → `vidasalud.mensajeria` (exchanges, colas, DLQ, patrones y reintentos) | `RabbitTopologyConfig` (Queue, Exchange y Binding por caso de uso) y `RabbitListenerConfig` (ACK manual) |
-| ms-appointments | `application.yml` → `vidasalud.mensajeria` (exchange y prefijo de routing key) | `RabbitConfig` (exchange topic, conversor JSON y confirmaciones del broker) |
+| ms-notify | `application.yml` → `vidasalud.mensajeria` (exchanges, colas, DLQ, patrones y reintentos) | `RabbitTopologyConfig` (Queue, Exchange y Binding por caso de uso), `RabbitListenerConfig` (ACK manual) y `OpenApiConfig` (Swagger) |
+| ms-appointments | `application.yml` → `vidasalud.mensajeria` (exchanges y routing key de cada evento) | `RabbitConfig` (exchange topic, conversor JSON y confirmaciones del broker) |
 
 ## Guion de demostración
 

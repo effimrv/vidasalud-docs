@@ -54,11 +54,11 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 | F27 | Consumidor de notificaciones al paciente (`cita.#`) | ✅ | vidasalud-ms-notify | `NotificacionCitaListener` · `GET /api/notify/notificaciones` |
 | F28 | Consumidor de tickets de atención (`cita.confirmada`) | ✅ | vidasalud-ms-notify | `TicketCitaListener` · `GET /api/notify/tickets` |
 | F29 | Consumidor de comprobantes (`cita.cerrada`) | ✅ | vidasalud-ms-notify | `DocumentoCitaListener` · `GET /api/notify/documentos` |
-| F30 | ACK manual, reintentos y NACK hacia la DLQ, con registro en logs | ✅ | vidasalud-ms-notify | `ConfirmacionMensajes.java` · `ConfirmacionMensajesTest` |
+| F30 | ACK manual explícito en cada consumidor, reintentos y NACK hacia la DLQ, con registro en logs | ✅ | vidasalud-ms-notify | `*CitaListener.java` · `ConfirmacionMensajes.java` · `TicketCitaListenerTest` |
 | F31 | Administración REST de colas (crear, consultar, eliminar) | ✅ | vidasalud-ms-notify | `POST/GET/DELETE /api/rabbit/queues` |
 | F32 | Administración REST de exchanges (crear, eliminar) | ✅ | vidasalud-ms-notify | `POST/DELETE /api/rabbit/exchanges` |
 | F33 | Administración REST de bindings (crear, eliminar) | ✅ | vidasalud-ms-notify | `POST/DELETE /api/rabbit/bindings` |
-| F34 | Validación de entrada en la API de administración (DTO y mensajes de error claros) | ✅ | vidasalud-ms-notify | `admin/dto/*` · `RabbitAdminControllerTest` |
+| F34 | Validación de entrada en la API de administración (DTO y mensajes de error claros) | ✅ | vidasalud-ms-notify | `admin/dto/*` · `RabbitAdminControllerTest` · Swagger `/swagger-ui.html` |
 
 ## 5. Despliegue en la nube
 
