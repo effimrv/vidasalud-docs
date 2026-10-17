@@ -12,7 +12,7 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 |---|---|---|---|---|
 | F01 | Inicio de sesión OAuth 2.0 / OpenID Connect con Microsoft Entra ID (redirect) | ✅ | vidasalud-frontend | `src/app/app.config.ts` · [07a4a35](https://github.com/effimrv/vidasalud-frontend/commit/07a4a35) |
 | F02 | Obtención y renovación del access token y envío como `Bearer` en cada llamada | ✅ | vidasalud-frontend | `MsalInterceptor` en `app.config.ts`, `api.service.ts` · [07a4a35](https://github.com/effimrv/vidasalud-frontend/commit/07a4a35) |
-| F03 | Registro de usuarios (self sign-up) en el tenant | ✅ | Entra ID | Captura del flujo de usuario en el portal de Entra ID |
+| F03 | Registro de pacientes por autoservicio (correo con código de un solo uso o cuenta Microsoft), con nombre, apellido y nombre para mostrar obligatorios; las cuentas nuevas entran como Paciente | ✅ | Entra ID + vidasalud-frontend + vidasalud-ms-bff | Flujo de usuario `B2X_1_registro_pacientes` · botón *Crear cuenta* · [08a0e78](https://github.com/effimrv/vidasalud-frontend/commit/08a0e78) · [60439db](https://github.com/effimrv/vidasalud-ms-bff/commit/60439db) |
 | F04 | Cierre de sesión | ✅ | vidasalud-frontend | `confirmarLogout()` en `app.component.ts` |
 | F05 | Protección de vistas privadas con `MsalGuard` | ✅ | vidasalud-frontend | `src/app/app.routes.ts` |
 | F06 | Validación del JWT (firma, emisor y vigencia) en el backend | ✅ | vidasalud-ms-bff | `SecurityConfig.java` · [0c5b46d](https://github.com/effimrv/vidasalud-ms-bff/commit/0c5b46d) |
