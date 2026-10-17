@@ -18,6 +18,7 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 | F06 | Validación del JWT (firma, emisor y vigencia) en el backend | ✅ | vidasalud-ms-bff | `SecurityConfig.java` · [0c5b46d](https://github.com/effimrv/vidasalud-ms-bff/commit/0c5b46d) |
 | F07 | Autorización por rol (Admin, Recepcionista, Paciente) | ✅ | vidasalud-ms-bff | `SecurityConfig.java` · [a8dc177](https://github.com/effimrv/vidasalud-ms-bff/commit/a8dc177) |
 | F08 | Datos del usuario autenticado (`GET /api/me`) | ✅ | vidasalud-ms-bff | `MeController.java` |
+| F38 | Cada paciente solo ve sus propias atenciones; las citas quedan con su identificador y nombre completo tomados del token (no editables desde el frontend) | ✅ | vidasalud-ms-bff + vidasalud-ms-appointments | `AppointmentsController` (BFF) · `pacienteId` · [74773e6](https://github.com/effimrv/vidasalud-ms-bff/commit/74773e6) · [140b5ab](https://github.com/effimrv/vidasalud-ms-bff/commit/140b5ab) · [7a04df8](https://github.com/effimrv/vidasalud-ms-appointments/commit/7a04df8) |
 
 ## 2. API Manager (AWS API Gateway)
 
@@ -72,6 +73,6 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 
 | Total del alcance | Implementadas | Parciales | No implementadas | % implementado |
 |---|---|---|---|---|
-| 37 | 37 | 0 | 0 | **100 %** |
+| 38 | 38 | 0 | 0 | **100 %** |
 
 *% implementado = funcionalidades implementadas y operativas ÷ total del alcance × 100.*
