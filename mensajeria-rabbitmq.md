@@ -15,6 +15,10 @@ flowchart LR
     EX -- "cita.#" --> Q1[vidasalud.notificaciones]
     EX -- "cita.confirmada" --> Q2[vidasalud.tickets]
     EX -- "cita.cerrada" --> Q3[vidasalud.documentos]
+    CMD[Comandos puntuales<br/>POST /api/rabbit/messages] --> DX{{vidasalud.comandos.direct<br/>direct}}
+    DX -- "notificacion.enviar" --> Q1
+    DX -- "ticket.emitir" --> Q2
+    DX -- "documento.generar" --> Q3
     Q1 --> NT[ms-notify]
     Q2 --> NT
     Q3 --> NT
@@ -26,6 +30,7 @@ flowchart LR
     DLX -- "documentos.dlq" --> D3[vidasalud.documentos.dlq]
     subgraph Cluster[Clúster RabbitMQ]
         EX
+        DX
         DLX
         Q1
         Q2
@@ -40,11 +45,13 @@ El clúster tiene dos nodos (`rabbitmq1` y `rabbitmq2`) que se levantan con `doc
 
 ## Casos de uso
 
-| Caso de uso | Disparador | Routing key | Cola | DLQ | Resultado |
-|---|---|---|---|---|---|
-| Notificar al paciente | Cualquier cambio de la cita | `cita.#` | `vidasalud.notificaciones` | `vidasalud.notificaciones.dlq` | Correo (simulado) con el nuevo estado |
-| Emitir ticket de atención | Cita confirmada | `cita.confirmada` | `vidasalud.tickets` | `vidasalud.tickets.dlq` | Número correlativo `T-0001` |
-| Generar comprobante | Cita cerrada | `cita.cerrada` | `vidasalud.documentos` | `vidasalud.documentos.dlq` | Comprobante `DOC-AAAAMMDD-<id>` |
+| Caso de uso | Disparador | Binding topic | Binding direct | Cola | DLQ | Resultado |
+|---|---|---|---|---|---|---|
+| Notificar al paciente | Cualquier cambio de la cita | `cita.#` | `notificacion.enviar` | `vidasalud.notificaciones` | `vidasalud.notificaciones.dlq` | Correo (simulado) con el nuevo estado |
+| Emitir ticket de atención | Cita confirmada | `cita.confirmada` | `ticket.emitir` | `vidasalud.tickets` | `vidasalud.tickets.dlq` | Número correlativo `T-0001` |
+| Generar comprobante | Cita cerrada | `cita.cerrada` | `documento.generar` | `vidasalud.documentos` | `vidasalud.documentos.dlq` | Comprobante `DOC-AAAAMMDD-<id>` |
+
+**Exchanges:** `vidasalud.citas.topic` (topic) recibe los eventos de ms-appointments y cada cola elige los suyos por patrón; `vidasalud.comandos.direct` (direct) encarga una tarea puntual a una sola cola con una routing key exacta; `vidasalud.dlx.direct` (direct) enruta los mensajes rechazados a su DLQ.
 
 ## Formato del evento
 
@@ -86,8 +93,9 @@ Cada consumidor (`NotificacionCitaListener`, `TicketCitaListener` y `DocumentoCi
 ## Guion de demostración
 
 1. `docker exec rabbitmq1 rabbitmqctl cluster_status` muestra los dos nodos en *Running Nodes*.
-2. En el panel `:15672`, pestaña *Exchanges*: `vidasalud.citas.topic` (topic) y `vidasalud.dlx.direct` (direct).
+2. En el panel `:15672`, pestaña *Exchanges*: `vidasalud.citas.topic` (topic), `vidasalud.comandos.direct` (direct) y `vidasalud.dlx.direct` (direct).
 3. Pestaña *Queues*: las 3 colas con sus 3 DLQ.
 4. En el frontend, agenda una cita y espera unos 2 minutos: el flujo automático la confirma, la pasa a espera y a consulta, y la cierra. Luego `docker logs notify | grep -E "Ticket|Comprobante"` (o `GET /api/notify/tickets` y `GET /api/notify/documentos`) muestra el ticket y el comprobante.
-5. Envía un mensaje inválido con `POST /api/rabbit/messages` y verás el contador de la DLQ subir.
-6. Crea y elimina una cola, un exchange y un binding con `/api/rabbit/...`, y muestra el error 400 al enviar un nombre vacío.
+5. Publica un evento en `vidasalud.comandos.direct` con la routing key `ticket.emitir`: solo la cola de tickets lo recibe.
+6. Envía un mensaje inválido con `POST /api/rabbit/messages` y verás el contador de la DLQ subir.
+7. Crea y elimina una cola, un exchange y un binding con `/api/rabbit/...`, y muestra el error 400 al enviar un nombre vacío.
