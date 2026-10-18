@@ -24,7 +24,7 @@ Estado de cada funcionalidad del alcance, componente responsable y evidencia ver
 
 | # | Funcionalidad | Estado | Componente | Evidencia |
 |---|---|---|---|---|
-| F09 | 11 rutas explícitas hacia el BFF (sin comodín `{proxy+}`) | ✅ | API Gateway `dzv5td4m80` | `aws apigatewayv2 get-routes --api-id dzv5td4m80` |
+| F09 | Una ruta explícita por cada endpoint del BFF (sin comodín `{proxy+}`) | ✅ | API Gateway `dzv5td4m80` | `aws apigatewayv2 get-routes --api-id dzv5td4m80` |
 | F10 | Validación del JWT en el gateway: rutas públicas responden 200 y las protegidas sin token, 401 | ✅ | API Gateway (autorizador JWT) | `curl …/api/info` → 200 · `curl …/api/me` → 401 |
 | F11 | CORS restringido al origen del frontend, a `GET/POST/PUT/OPTIONS` y a los encabezados `authorization` y `content-type` | ✅ | API Gateway + vidasalud-ms-bff | Preflight `OPTIONS` → 204 · [b5ab844](https://github.com/effimrv/vidasalud-ms-bff/commit/b5ab844) |
 

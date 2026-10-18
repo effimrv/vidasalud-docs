@@ -88,6 +88,6 @@ Cada consumidor (`NotificacionCitaListener`, `TicketCitaListener` y `DocumentoCi
 1. `docker exec rabbitmq1 rabbitmqctl cluster_status` muestra los dos nodos en *Running Nodes*.
 2. En el panel `:15672`, pestaña *Exchanges*: `vidasalud.citas.topic` (topic) y `vidasalud.dlx.direct` (direct).
 3. Pestaña *Queues*: las 3 colas con sus 3 DLQ.
-4. En el frontend, agenda una cita, confírmala y ciérrala. Luego `GET /api/notify/tickets` y `GET /api/notify/documentos` muestran el ticket y el comprobante.
+4. En el frontend, agenda una cita y espera unos 2 minutos: el flujo automático la confirma, la pasa a espera y a consulta, y la cierra. Luego `docker logs notify | grep -E "Ticket|Comprobante"` (o `GET /api/notify/tickets` y `GET /api/notify/documentos`) muestra el ticket y el comprobante.
 5. Envía un mensaje inválido con `POST /api/rabbit/messages` y verás el contador de la DLQ subir.
 6. Crea y elimina una cola, un exchange y un binding con `/api/rabbit/...`, y muestra el error 400 al enviar un nombre vacío.
