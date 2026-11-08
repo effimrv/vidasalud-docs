@@ -15,15 +15,20 @@ RabbitMQ no cambia: sigue entregando notificaciones, tickets y comprobantes. Kaf
 flowchart LR
     AP[ms-appointments<br/>productor] -- "clave = citaId" --> T{{appointments.events<br/>3 particiones · RF 3}}
     AP -. "sigue igual" .-> RMQ[(RabbitMQ)]
-    T -- "grupo vidasalud-report<br/>3 hilos" --> R[ms-report<br/>KPIs]
+    T -- "grupo vidasalud-report<br/>3 hilos" --> R[ms-report<br/>KPIs y administrador]
     T -- "grupo vidasalud-audit<br/>3 hilos" --> A[ms-audit<br/>timeline]
+    A -- "clave = citaId:tipo:instante" --> TL{{audit.timeline<br/>3 particiones · RF 3}}
+    TL -- "grupo vidasalud-report-timeline<br/>3 hilos" --> R
     R -- "error tras reintentos" --> D{{appointments.events.DLT}}
     A -- "error tras reintentos" --> D
     ADM[ms-report<br/>administrador Kafka] -. "crea, modifica, elimina" .-> T
+    ADM -. "crea, modifica, elimina" .-> TL
     UI[Kafka-UI :8090] -. "observa" .-> T
+    UI -. "observa" .-> TL
     subgraph Clúster Kafka
         Z[Zookeeper 1, 2 y 3] --- B[Brokers 1, 2 y 3]
         B --- T
+        B --- TL
         B --- D
     end
 ```
